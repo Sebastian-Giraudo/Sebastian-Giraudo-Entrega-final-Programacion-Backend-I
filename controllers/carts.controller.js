@@ -9,7 +9,7 @@ export const addProductToCart = async (req, res) => {
 
     try {
         // *** ESTO ES CRÍTICO: VERIFICAR QUE EL PRODUCTO REALMENTE EXISTA ***
-        const productExists = await Product.findById(pid); // <-- ¡AHORA SÍ BUSCA EL PRODUCTO REAL!
+        const productExists = await Product.findById(pid); 
         if (!productExists) {
             console.log(`Producto con ID ${pid} no encontrado en la base de datos.`);
             return res.status(404).send('<h1>Producto no encontrado</h1><a href="/products">Volver</a>');
@@ -63,7 +63,7 @@ export const addProductToCart = async (req, res) => {
     }
 };
 
-// Función para crear un carrito (si la ruta POST /api/carts/ la usa)
+// Función para crear un carrito 
 export const createCart = async (req, res) => {
     try {
         const newCart = new Cart({ products: [] });
@@ -83,13 +83,13 @@ export const getCartById = async (req, res) => {
         return res.status(404).render('error', { message: 'Carrito no encontrado.' });
     }
     const products = cart.products.map(p => ({
-        // Asegúrate de que p.product no sea null/undefined antes de acceder a sus propiedades
+        
         product: p.product ? {
             _id: p.product._id,
             title: p.product.title,
             price: p.product.price,
-            // Añade otras propiedades del producto que quieras mostrar en el carrito
-        } : null, // Si p.product es null, asigna null
+            
+        } : null, 
         quantity: p.quantity
     }));
 
@@ -121,11 +121,11 @@ export const updateCart = async (req, res) => {
     const { cid } = req.params;
     const { products } = req.body;
     try {
-        // Asegúrate de que los productos del body sean válidos si se van a reemplazar todos
+        
         if (!Array.isArray(products)) {
             return res.status(400).json({ status: 'error', message: 'El formato de productos es inválido.' });
         }
-        // Opcional: Validar que los IDs de productos en 'products' existan en la DB
+        
         const updatedCart = await Cart.findByIdAndUpdate(cid, { products }, { new: true });
         if (!updatedCart) {
             return res.status(404).json({ status: 'error', message: 'Carrito no encontrado.' });
@@ -172,7 +172,7 @@ export const deleteAllProducts = async (req, res) => {
         if (!cart) {
             return res.status(404).json({ status: 'error', message: 'Carrito no encontrado.' });
         }
-        // res.status(200).json({ status: 'success', message: 'Todos los productos eliminados del carrito.', cart: cart });
+        
         res.redirect(`/carts/${cid}`); // Redirige de vuelta al carrito vacío
     } catch (error) {
         console.error('Error al vaciar el carrito:', error);

@@ -1,5 +1,3 @@
-// routes/carts.router.js
-
 import { Router } from 'express';
 import {
     getCartById,
@@ -7,8 +5,8 @@ import {
     updateCart,
     updateProductQuantity,
     deleteAllProducts,
-    addProductToCart, // <-- ¡Añade esta importación!
-    createCart // <-- ¡Añade esta importación para crear carritos!
+    addProductToCart, 
+    createCart 
 } from '../controllers/carts.controller.js';
 
 const router = Router();
@@ -22,11 +20,10 @@ router.delete('/:cid', deleteAllProducts);
 
 // **NUEVAS RUTAS:**
 
-// Ruta para crear un nuevo carrito (útil si el ID '1' no existe o quieres más dinamismo)
+// Ruta para crear un nuevo carrito 
 router.post('/', createCart);
 
 // Ruta para agregar un producto a un carrito específico
-router.post('/:cid/products/:pid', addProductToCart); // <-- ¡Añade esta ruta!
-
+router.post('/:cid/products/:pid', addProductToCart);
 
 export default router;
