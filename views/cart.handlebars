@@ -1,0 +1,30 @@
+<h1>Carrito</h1>
+
+{{#if products.length}}
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Producto</th>
+        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Precio</th>
+        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Cantidad</th>
+        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+        <tr>
+          <td style="padding: 10px;">{{this.product.title}}</td>
+          <td style="padding: 10px;">${{this.product.price}}</td>
+          <td style="padding: 10px;">{{this.quantity}}</td>
+          <td style="padding: 10px;">${{multiply this.product.price this.quantity}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <p style="margin-top: 1rem;"><strong>Total del carrito:</strong> ${{total}}</p>
+{{else}}
+  <p>El carrito está vacío.</p>
+{{/if}}
+
+<a href="/products">⬅️ Seguir comprando</a>

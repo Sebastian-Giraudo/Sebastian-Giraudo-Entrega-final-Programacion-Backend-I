@@ -1,0 +1,35 @@
+<h1 style="text-align: center;">Productos</h1>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <a href="/carts/ultimo" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        Ver mi Carrito
+    </a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 2rem;">
+    {{#each products}}
+    <div style="border: 1px solid #ccc; padding: 1rem; border-radius: 10px;">
+        <h3>{{this.title}}</h3>
+        <p><strong>Precio:</strong> ${{this.price}}</p>
+        <p><strong>Categoría:</strong> {{this.category}}</p>
+        <p><strong>Stock:</strong> {{this.stock}}</p>
+        <a href="/products/product-detail/{{this._id}}">Ver detalle</a>         <form action="/api/carts/1/products/{{this._id}}" method="post">
+        <button type="submit" style="margin-top: 10px; padding: 8px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Agregar al carrito
+        </button>
+        </form>
+        </div>
+    {{/each}}
+    </div>
+
+    <div style="text-align: center; margin: 2rem;">
+    {{#if hasPrevPage}}
+        <a href="{{prevLink}}">⬅️ Anterior</a>
+    {{/if}}
+
+    <span style="margin: 0 1rem;">Página {{page}} de {{totalPages}}</span>
+
+    {{#if hasNextPage}}
+        <a href="{{nextLink}}">Siguiente ➡️</a>
+    {{/if}}
+</div>
