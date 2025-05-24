@@ -1,13 +1,23 @@
-<h1>Detalle del producto</h1>
+<h1 class="page-title">Detalle del Producto</h1>
 
-<div style="padding: 2rem;">
-  <h2>{{product.title}}</h2>
-  <p><strong>Precio:</strong> ${{product.price}}</p>
-  <p><strong>Categoría:</strong> {{product.category}}</p>
-  <p><strong>Descripción:</strong> {{product.description}}</p>
-  <p><strong>Stock:</strong> {{product.stock}}</p>
+<div class="product-detail-container">
+    <div class="product-detail-info">
+        <h2 class="product-detail-title">{{product.title}}</h2>
+        <p class="product-detail-category">{{product.category}}</p>
+        <p class="product-detail-price">U$S {{product.price}}</p>
+        <p class="product-detail-stock">Stock: {{product.stock}}</p>
+        <p class="product-detail-description">{{product.description}}</p>
 
-  <button>Agregar al carrito</button>
+        <div class="product-detail-actions">
+            <a href="/products" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Listado</a>
+            <form action="/api/carts/1/products/{{product._id}}" method="POST" class="add-to-cart-form-detail">
+                <button type="submit" class="btn btn-success">
+                    Añadir al Carrito <i class="fas fa-cart-plus"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="product-detail-image-wrapper">
+        <img src="/{{product.thumbnails}}" alt="{{product.title}}" class="product-detail-img">
+    </div>
 </div>
-
-<a href="/products">⬅️ Volver</a>

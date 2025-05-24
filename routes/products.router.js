@@ -1,4 +1,3 @@
-// routes/products.router.js
 import { Router } from 'express';
 import { Product } from '../dao/models/Product.js'; 
 

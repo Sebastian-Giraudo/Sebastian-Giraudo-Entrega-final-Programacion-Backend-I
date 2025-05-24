@@ -1,35 +1,72 @@
-<h1 style="text-align: center;">Productos</h1>
+<h1 class="page-title">Nuestros Productos</h1>
 
-<div style="text-align: center; margin-bottom: 20px;">
-    <a href="/carts/ultimo" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-        Ver mi Carrito
-    </a>
+<div class="product-controls">
+    {{!-- Formulario de Filtro y Ordenamiento --}}
+    <form action="/products" method="GET" class="filter-sort-form">
+        <label for="query">Buscar por Marca:</label>
+        <select name="query" id="query" class="form-control">
+            <option value="">Todas</option>
+            <option value="Samsung" {{#if (eq query "Samsung")}}selected{{/if}}>Samsung</option>
+            <option value="Apple" {{#if (eq query "Apple")}}selected{{/if}}>Apple</option>
+            <option value="Xiaomi" {{#if (eq query "Xiaomi")}}selected{{/if}}>Xiaomi</option>
+            <option value="Motorola" {{#if (eq query "Motorola")}}selected{{/if}}>Motorola</option>
+            <option value="Google" {{#if (eq query "Google")}}selected{{/if}}>Google</option>
+            <option value="Huawei" {{#if (eq query "Huawei")}}selected{{/if}}>Huawei</option>
+        </select>
+
+        <label for="sort">Ordenar por Precio:</label>
+        <select name="sort" id="sort" class="form-control">
+            <option value="">Por defecto</option>
+            <option value="asc" {{#if (eq sort "asc")}}selected{{/if}}>Ascendente</option>
+            <option value="desc" {{#if (eq sort "desc")}}selected{{/if}}>Descendente</option>
+        </select>
+
+        <label for="limit">Productos por página:</label>
+        <select name="limit" id="limit" class="form-control">
+            <option value="5" {{#if (eq limit "5")}}selected{{/if}}>5</option>
+            <option value="10" {{#if (eq limit "10")}}selected{{/if}}>10</option>
+            <option value="20" {{#if (eq limit "20")}}selected{{/if}}>20</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Aplicar</button>
+    </form>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 2rem;">
-    {{#each products}}
-    <div style="border: 1px solid #ccc; padding: 1rem; border-radius: 10px;">
-        <h3>{{this.title}}</h3>
-        <p><strong>Precio:</strong> ${{this.price}}</p>
-        <p><strong>Categoría:</strong> {{this.category}}</p>
-        <p><strong>Stock:</strong> {{this.stock}}</p>
-        <a href="/products/product-detail/{{this._id}}">Ver detalle</a>         <form action="/api/carts/1/products/{{this._id}}" method="post">
-        <button type="submit" style="margin-top: 10px; padding: 8px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-            Agregar al carrito
-        </button>
-        </form>
-        </div>
-    {{/each}}
-    </div>
-
-    <div style="text-align: center; margin: 2rem;">
-    {{#if hasPrevPage}}
-        <a href="{{prevLink}}">⬅️ Anterior</a>
-    {{/if}}
-
-    <span style="margin: 0 1rem;">Página {{page}} de {{totalPages}}</span>
-
-    {{#if hasNextPage}}
-        <a href="{{nextLink}}">Siguiente ➡️</a>
-    {{/if}}
+<div class="product-grid">
+    {{#each products}}
+        <div class="product-card">
+            <img src="{{this.thumbnails}}" alt="{{this.title}}" class="product-img">
+            <div class="product-info">
+                <h3 class="product-title">{{this.title}}</h3>
+                <p class="product-category">{{this.category}}</p>
+                <p class="product-price">U$S {{this.price}}</p>
+                <p class="product-stock">Stock: {{this.stock}}</p>
+            </div>
+            <div class="product-actions">
+                <a href="/products/{{this._id}}" class="btn btn-secondary">Ver Detalle</a>
+                <form action="/api/carts/1/products/{{this._id}}" method="POST" class="add-to-cart-form">
+                    <button type="submit" class="btn btn-success">
+                        Añadir al Carrito <i class="fas fa-cart-plus"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    {{else}}
+        <p class="no-products">No hay productos disponibles con los filtros aplicados.</p>
+    {{/each}}
 </div>
+
+<div class="pagination-controls">
+    {{#if hasPrevPage}}
+        <a href="{{prevLink}}" class="btn btn-secondary">Página Anterior</a>
+    {{/if}}
+    <span class="page-info">Página {{page}} de {{totalPages}}</span>
+    {{#if hasNextPage}}
+        <a href="{{nextLink}}" class="btn btn-secondary">Página Siguiente</a>
+    {{/if}}
+</div>
+
+
+{{#*inline "eq"}}
+    {{#eq this this}}{{/eq}}
+{{/inline}}

@@ -1,30 +1,61 @@
-<h1>Carrito</h1>
+<h1 class="page-title">Detalle de tu Carrito</h1>
+
+<div class="cart-actions-top">
+    <a href="/products" class="btn btn-primary">
+        Volver a Productos
+    </a>
+
+    {{#if products.length}}
+    <form action="/api/carts/{{cart._id}}?_method=DELETE" method="POST" class="clear-cart-form">
+        <button type="submit" class="btn btn-danger">
+            Vaciar Carrito
+        </button>
+    </form>
+    {{/if}}
+</div>
 
 {{#if products.length}}
-  <table style="width: 100%; border-collapse: collapse;">
-    <thead>
-      <tr>
-        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Producto</th>
-        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Precio</th>
-        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Cantidad</th>
-        <th style="border-bottom: 1px solid #ccc; padding: 10px;">Subtotal</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each products}}
-        <tr>
-          <td style="padding: 10px;">{{this.product.title}}</td>
-          <td style="padding: 10px;">${{this.product.price}}</td>
-          <td style="padding: 10px;">{{this.quantity}}</td>
-          <td style="padding: 10px;">${{multiply this.product.price this.quantity}}</td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+<div style="max-width: 900px; margin: 0 auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Producto</th>
+                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Cantidad</th>
+                <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">Precio Unitario</th>
+                <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">Subtotal</th>
+                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px;">
+                    <a href="/products/product-detail/{{this.product._id}}" style="text-decoration: none; color: #007bff;">{{this.product.title}}</a>
+                </td>
+                <td style="padding: 12px; text-align: center;">{{this.quantity}}</td>
+                <td style="padding: 12px; text-align: right;">U$S {{this.product.price}}</td>
+                <td style="padding: 12px; text-align: right;">U$S {{multiply this.product.price this.quantity}}</td>
+                <td style="padding: 12px; text-align: center;">
+                    {{!-- Formulario para ELIMINAR UNA UNIDAD --}}
+                    <form action="/api/carts/{{../cart._id}}/products/{{this.product._id}}?_method=PUT" method="POST" style="display: inline-block;">
+                        <input type="hidden" name="quantity" value="{{subtract this.quantity 1}}"> {{!-- Necesitarías un helper 'subtract' o JS --}}
+                        <button type="submit" style="background-color: #ffc107; color: black; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">-1 ud</button>
+                    </form>
 
-  <p style="margin-top: 1rem;"><strong>Total del carrito:</strong> ${{total}}</p>
+                    {{!-- Formulario para ELIMINAR TODO EL PRODUCTO --}}
+                    <form action="/api/carts/{{../cart._id}}/products/{{this.product._id}}?_method=DELETE" method="POST" style="display: inline-block; margin-left: 5px;">
+                        <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <div style="padding: 15px; text-align: right; background-color: #f8f9fa; border-top: 1px solid #ddd;">
+        <h3 style="margin: 0;">Total del Carrito: <span id="cart-total">U$S {{cart.total}}</span></h3>        
+    </div>
+</div>
 {{else}}
-  <p>El carrito está vacío.</p>
+    <p style="text-align: center; margin-top: 50px; font-size: 1.5em; color: #666;">Tu carrito está vacío.</p>
 {{/if}}
-
-<a href="/products">⬅️ Seguir comprando</a>

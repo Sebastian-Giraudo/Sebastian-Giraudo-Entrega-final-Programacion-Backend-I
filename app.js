@@ -1,11 +1,12 @@
 import express from 'express';
+import methodOverride from 'method-override';
 import mongoose from 'mongoose';
 import exphbs from 'express-handlebars';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-
+// --- ÚNICA IMPORTACIÓN Y CONFIGURACIÓN DE DOTENV ---
 import dotenv from 'dotenv';
 dotenv.config();
 // ----------------------------------------------------
@@ -15,9 +16,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Importación de routers
-import productRouter from './routes/products.router.js'; // Para la API REST de productos
-import cartRouter from './routes/carts.router.js';     // Para la API REST de carritos
-import viewsRouter from './routes/views.router.js';   // Para las VISTAS de Handlebars
+import productRouter from './routes/products.router.js'; // Este es para la API REST de productos
+import cartRouter from './routes/carts.router.js';     // Este es para la API REST de carritos
+
+// NUEVAS IMPORTACIONES DE ROUTERS DE VISTAS SEPARADOS
+import productsViewsRouter from './routes/views.router.js'; 
+import cartsViewsRouter from './routes/carts.views.router.js'; 
 
 const app = express();
 
@@ -31,6 +35,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 // Configuración de Handlebars
 const hbs = exphbs.create({
@@ -41,6 +46,13 @@ const hbs = exphbs.create({
     helpers: {
         multiply: function(a, b) {
             return a * b;
+        },
+        subtract: function(a, b) { 
+            return a - b;
+        },
+        // ¡CAMBIO AQUÍ! Nueva definición para el helper 'eq'
+        eq: function(arg1, arg2) { 
+            return arg1 == arg2;
         }
     }
 });
@@ -52,13 +64,19 @@ app.set('views', path.join(__dirname, '/views'));
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, '/public')));
 
-// Rutas API (para interactuar con la DB a través de REST)
+// Rutas API 
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 
 // Rutas de VISTAS (Handlebars)
+app.use('/products', productsViewsRouter);
+// Montamos el router de vistas de carritos en /carts
+app.use('/carts', cartsViewsRouter); 
 
-app.use('/', viewsRouter);
+// Ruta raíz que redirige a /products
+app.get('/', (req, res) => {
+    res.redirect('/products');
+});
 
 // Servidor
 const PORT = process.env.PORT || 8080;
